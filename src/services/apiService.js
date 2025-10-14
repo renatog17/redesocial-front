@@ -1,0 +1,27 @@
+import axios from 'axios';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+const api = axios.create({
+  baseURL: BASE_URL,
+  timeout: 5000,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+export const publicApi = axios.create({
+  baseURL: BASE_URL,
+  timeout: 5000,
+  
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+//public api
+export const registerUser = (dados) => publicApi.post('/user/account', dados);
+export const genders = () => publicApi.get('/genders');
+//api
+export const login = (dados) => api.post('/auth/login', dados) //manter assim por enquanto. está dando conflito com o nome de uma variável interna do component de realizar login
+export const checkLogin = () => api.get('/auth/login/check')
+export const logout = () => api.post('/auth/logout');
