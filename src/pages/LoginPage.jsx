@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/apiService";
 import { APP_NAME } from "../configs/constants";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const LoginPage = () => {
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setAuthenticated } = useAuth();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -27,9 +29,11 @@ const LoginPage = () => {
     try {
       const response = await login(formData);
       console.log("Login response:", response);
+
       if (response.status === 200) {
         setMessage("Login successful!");
-        setTimeout(() => navigate("/feed"), 1000); // redireciona para o feed ou home
+        setAuthenticated(true);
+        navigate("/feed");
       }
     } catch (error) {
       console.error(error);

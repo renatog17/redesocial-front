@@ -6,7 +6,7 @@ const PublicRoute = ({ children }) => {
 
   if (loading) return <div>Carregando...</div>;
 
-  //if (authenticated) return <Navigate to="/dashboard" />;
+  if (authenticated) return <Navigate to="/feed" />;
 
   return children;
 };

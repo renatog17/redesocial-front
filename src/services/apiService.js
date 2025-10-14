@@ -24,4 +24,4 @@ export const genders = () => publicApi.get('/genders');
 //api
 export const login = (dados) => api.post('/auth/login', dados) //manter assim por enquanto. está dando conflito com o nome de uma variável interna do component de realizar login
 export const checkLogin = () => api.get('/auth/login/check')
-export const logout = () => api.post('/auth/logout');
+export const logout = () => api.post('/auth/login/logout');

@@ -22,7 +22,7 @@ export function AuthProvider({ children }) {
         verify();
     }, []);
 
-    async function realizarLogut() {
+    async function realizarLogout() {
         try {
             await logout();
             setAuthenticated(false);
@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
     }
 
     return (
-        <AuthContext.Provider value={{ authenticated, setAuthenticated, loading }}>
+        <AuthContext.Provider value={{ authenticated, setAuthenticated, loading, realizarLogout }}>
             {children}
         </AuthContext.Provider>
     );
