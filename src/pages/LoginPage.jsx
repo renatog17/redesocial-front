@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/apiService";
 import { APP_NAME } from "../configs/constants";

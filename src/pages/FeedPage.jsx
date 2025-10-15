@@ -10,11 +10,11 @@ const FeedPage = () => {
       <Topbar />
 
       {/* Add padding-top so content starts below the Topbar */}
-      {/*<div className="flex flex-col md:flex-row flex-1 pt-16 md:pt-0">
+      <div className="flex flex-col md:flex-row flex-1 pt-16 md:pt-0">
         <SidebarLeft />
         <Feed />
         <SidebarRight />
-      </div>*/}
+      </div>
     </div>
   );
 };
