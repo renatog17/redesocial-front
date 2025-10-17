@@ -20,11 +20,19 @@ const Topbar = () => {
     }
   };
 
+  const handleFeed = () => {
+    navigate("/feed");
+  }
+
   return (
     <header className="fixed top-0 left-0 w-full bg-white shadow p-4 flex justify-between items-center z-10">
       {/* Logo / Nome do app */}
-      <span className="font-bold text-xl">{APP_NAME}</span>
-
+      <span
+        onClick={handleFeed}
+        className="font-bold text-xl cursor-pointer hover:text-blue-500 transition"
+      >
+        {APP_NAME}
+      </span>
       {/* Menu button mobile */}
       <button className="text-gray-600 hover:text-blue-500 md:hidden">
         ☰

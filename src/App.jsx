@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import PublicRoute from "./privateroutes/PublicRoute";
 import PrivateRoute from "./privateroutes/PrivateRoute";
 import FeedPage from "./pages/FeedPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -35,6 +36,14 @@ function App() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/:nickname"
+        element={
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
+        }
+      />  
     </Routes>
   );
 }
