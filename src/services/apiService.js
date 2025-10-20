@@ -28,3 +28,5 @@ export const logout = () => api.post('/auth/login/logout');
 export const getUserProfile = (nickname) => api.get(`/user/profile/${nickname}`);
 export const postConnection = (data) => api.post('/connection', data);
 export const getConnection = (id) => api.get(`/connection/${id}`);
+export const getInviteConnections = () => api.get(`/connection/invites`);
+export const postAcceptConnection = (dados) => api.post(`/connection/invites`, dados);
