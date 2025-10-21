@@ -1,21 +1,28 @@
 import React, { useState } from "react";
+import { postNewPost } from "../services/apiService";
 
-const NewPost = ({ onPostCreated }) => {
+const NewPost = () => {
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!content.trim()) return;
 
-    // Later this can call your backend API
     const newPost = {
-      id: Date.now(),
-      title: "New Post",
-      content,
+      content
     };
 
-    onPostCreated(newPost);
-    setContent("");
+    try{
+      setLoading(true);
+      const response = await postNewPost(newPost);
+      setContent("");
+    }catch(err){
+      console.error("Error creating post:", err);
+    }finally{
+      setLoading(false);
+    }
+    
   };
 
   return (

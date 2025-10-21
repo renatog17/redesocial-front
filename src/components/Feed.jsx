@@ -1,15 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NewPost from "./NewPost";
 import PostCard from "./PostCard";
+import { getPosts } from "../services/apiService"; // importa o método da API
 
 const Feed = () => {
-  const [posts, setPosts] = useState([
-    { id: 1, title: "Post 1", content: "This is the first post." },
-    { id: 2, title: "Post 2", content: "This is the second post." },
-  ]);
+  const [posts, setPosts] = useState([]);
+
+  // buscar posts do backend ao montar o componente
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await getPosts();
+        setPosts(response.data); // a API retorna uma lista de ReadPostDTO
+      } catch (error) {
+        console.error("Erro ao buscar posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   const handleNewPost = (newPost) => {
-    setPosts([newPost, ...posts]); // add the new post to the top
+    // adiciona o novo post no topo da lista
+    setPosts((prev) => [newPost, ...prev]);
   };
 
   return (
@@ -19,9 +32,19 @@ const Feed = () => {
       <NewPost onPostCreated={handleNewPost} />
 
       <div className="flex flex-col gap-4">
-        {posts.map((p) => (
-          <PostCard key={p.id} title={p.title} content={p.content} />
-        ))}
+        {posts.length === 0 ? (
+          <p className="text-gray-500 text-center">Nenhum post encontrado.</p>
+        ) : (
+          posts.map((p) => (
+            <PostCard
+              key={p.id}
+              content={p.content}
+              createdAt={p.createdAt}
+              likes={p.likes}
+              images={p.images}
+            />
+          ))
+        )}
       </div>
     </main>
   );

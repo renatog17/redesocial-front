@@ -30,3 +30,5 @@ export const postConnection = (data) => api.post('/connection', data);
 export const getConnection = (id) => api.get(`/connection/${id}`);
 export const getInviteConnections = () => api.get(`/connection/invites`);
 export const postAcceptConnection = (dados) => api.post(`/connection/invites`, dados);
+export const postNewPost = (dados) => api.post('/post', dados);
+export const getPosts = () => api.get('/post');
