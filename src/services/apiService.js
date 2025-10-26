@@ -32,3 +32,4 @@ export const getInviteConnections = () => api.get(`/connection/invites`);
 export const postAcceptConnection = (dados) => api.post(`/connection/invites`, dados);
 export const postNewPost = (dados) => api.post('/post', dados);
 export const getPosts = () => api.get('/post');
+//export const getAuthenticatedUser = () => api.get('/user/profile/auth');

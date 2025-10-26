@@ -14,7 +14,7 @@ const LoginPage = () => {
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setAuthenticated } = useAuth();
+  const { setAuthenticated, setUser } = useAuth();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -28,8 +28,8 @@ const LoginPage = () => {
 
     try {
       const response = await login(formData);
-      console.log("Login response:", response);
-
+      setUser(response.data);
+      console.log("Login successful:", response.data);
       if (response.status === 200) {
         setMessage("Login successful!");
         setAuthenticated(true);

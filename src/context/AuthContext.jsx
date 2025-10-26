@@ -6,6 +6,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
     const [authenticated, setAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {  
         async function verify(){
@@ -26,13 +27,14 @@ export function AuthProvider({ children }) {
         try {
             await logout();
             setAuthenticated(false);
+            setUser(null);
         } catch (error) {
             console.error("Logout failed:", error);
         }
     }
 
     return (
-        <AuthContext.Provider value={{ authenticated, setAuthenticated, loading, realizarLogout }}>
+        <AuthContext.Provider value={{ authenticated, setAuthenticated, loading, realizarLogout, user, setUser }}>
             {children}
         </AuthContext.Provider>
     );

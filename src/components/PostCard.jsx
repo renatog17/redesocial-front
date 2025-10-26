@@ -1,6 +1,5 @@
-import React from "react";
-import { Heart } from "lucide-react"; // ícone de coração (usando lucide)
-import dayjs from "dayjs"; // para formatar data
+import { Heart } from "lucide-react";
+import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 
 dayjs.locale("pt-br");
