@@ -12,7 +12,8 @@ export function AuthProvider({ children }) {
         async function verify(){
             try{
                 const response = await checkLogin();
-                console.log("User is authenticated:", response.data);
+                console.log("User nickname:", response.data.nickName);
+                setUser(response.data);
                 setAuthenticated(true);
             } catch (error) {
                 setAuthenticated(false);

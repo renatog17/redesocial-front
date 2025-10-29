@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { getConnection, getUserProfile } from "../services/apiService";
 import { postConnection } from "../services/apiService";
 import TopBar from "../components/TopBar";
+import { useAuth } from "../context/AuthContext";
 
 function ProfilePage() {
   const { nickname } = useParams();
@@ -10,6 +11,7 @@ function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [requestSent, setRequestSent] = useState(false);
   const [connection, setConnection] = useState(null);
+  const { user: authUser } = useAuth();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,6 +32,7 @@ function ProfilePage() {
     const fetchConnection = async () => {
       try {
         if (!user) return; // só busca a conexão se o usuário já estiver carregado
+        if (authUser?.nickName === nickname) return;
         const responseConnection = await getConnection(user.id);
         const connectionData = responseConnection.data;
         setConnection(connectionData);
@@ -80,9 +83,10 @@ function ProfilePage() {
     );
   }
 
-  const { name, nickName, photoUrl, readPrivateUserProfileDTO } = user;
+  const { name, nickName, photoUrl, readPrivateUserProfileDTO } = user.body;
   const bio = readPrivateUserProfileDTO?.bio;
   const posts = readPrivateUserProfileDTO?.posts || [];
+  const isOwnProfile = authUser?.nickName === nickName;
 
   return (
     <div className="bg-[#e7ebf2] min-h-screen text-gray-800 font-sans">
@@ -103,23 +107,32 @@ function ProfilePage() {
             <p className="text-gray-600 text-sm">@{nickName}</p>
           </div>
           {/* Botão de solicitação */}
-          <div className="mt-4">
-            {requestSent ? (
-              <button
-                disabled
-                className="bg-gray-300 text-gray-600 px-4 py-2 rounded-md cursor-not-allowed"
-              >
-                Solicitação enviada ✓
-              </button>
-            ) : (
-              <button
-                onClick={handleSendRequest}
-                className="bg-[#3b5998] text-white px-4 py-2 rounded-md hover:bg-[#2d4373] transition"
-              >
-                Enviar solicitação
-              </button>
-            )}
-          </div>
+          {/* 🔹 Só mostra botão se não for o próprio perfil */}
+          {!isOwnProfile && (
+            <div className="mt-4">
+              {requestSent ? (
+                <button
+                  disabled
+                  className="bg-gray-300 text-gray-600 px-4 py-2 rounded-md cursor-not-allowed"
+                >
+                  Solicitação enviada ✓
+                </button>
+              ) : (
+                <button
+                  onClick={handleSendRequest}
+                  className="bg-[#3b5998] text-white px-4 py-2 rounded-md hover:bg-[#2d4373] transition"
+                >
+                  Enviar solicitação
+                </button>
+              )}
+            </div>
+          )}
+
+          {isOwnProfile && (
+            <div className="mt-4 text-center text-gray-500 text-sm italic">
+              Este é o seu perfil
+            </div>
+          )}
 
           <hr className="my-4 border-gray-300" />
 
