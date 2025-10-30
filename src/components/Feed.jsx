@@ -10,6 +10,7 @@ const Feed = () => {
     const fetchPosts = async () => {
       try {
         const response = await getPosts();
+        console.log("Posts fetched:", response.data);
         setPosts(response.data);
       } catch (error) {
         console.error("Erro ao buscar posts:", error);
@@ -18,10 +19,10 @@ const Feed = () => {
 
     fetchPosts();
   }, []);
-  
+
   return (
     <main className="flex-1 p-4 md:p-6">
-      <NewPost onPostCreated/>
+      <NewPost onPostCreated />
 
       <div className="flex flex-col gap-4">
         {posts.length === 0 ? (
@@ -34,6 +35,9 @@ const Feed = () => {
               createdAt={p.createdAt}
               likes={p.likes}
               images={p.images}
+              userProfileName={p.userProfileName}
+              userProfileNickName={p.userProfileNickName}
+              userProfilePhotoURL={p.userProfilePhotoURL} // cuidado com o nome errado vindo do backend
             />
           ))
         )}

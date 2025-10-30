@@ -59,14 +59,14 @@ function ProfilePage() {
   }, [user]);
 
   const handleSendRequest = async () => {
-    try {
-      if (!user?.id) return;
-      await postConnection({ idTarget: user.id });
-      setRequestSent(true);
-    } catch (error) {
-      console.error("Erro ao enviar solicitação:", error);
-    }
-  };
+  try {
+    if (!user?.body?.id) return;
+    await postConnection({ idTarget: user.body.id });
+    setRequestSent(true);
+  } catch (error) {
+    console.error("Erro ao enviar solicitação:", error);
+  }
+};
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];

@@ -13,7 +13,7 @@ const api = axios.create({
 export const publicApi = axios.create({
   baseURL: BASE_URL,
   timeout: 5000,
-  
+
   headers: {
     'Content-Type': 'application/json'
   }
@@ -32,6 +32,19 @@ export const getInviteConnections = () => api.get(`/connection/invites`);
 export const postAcceptConnection = (dados) => api.post(`/connection/invites`, dados);
 export const postNewPost = (dados) => api.post('/post', dados);
 export const getPosts = () => api.get('/post');
+
+export const postImageNewPost = (file, postId) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("postId", postId);
+
+  return api.post('/post/photo', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+
 
 // Envia a foto de perfil do usuário
 export const uploadProfilePhoto = (file) => {
