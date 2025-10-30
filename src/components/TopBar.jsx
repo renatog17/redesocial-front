@@ -30,13 +30,20 @@ const Topbar = () => {
       <div className="hidden md:flex gap-4 items-center relative">
         <FriendRequestsDropDown />
 
-        {/* Avatar e nome do usuário */}
         <div
           onClick={handleProfile}
           className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition"
         >
           <div className="w-8 h-8">
+            {user.photoUrl ? (
+              <img
+                src={user.photoUrl}
+                alt={user.nickName}
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
               <div className="w-full h-full bg-gray-200 rounded-full" />
+            )}
           </div>
         </div>
 

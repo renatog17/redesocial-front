@@ -32,4 +32,18 @@ export const getInviteConnections = () => api.get(`/connection/invites`);
 export const postAcceptConnection = (dados) => api.post(`/connection/invites`, dados);
 export const postNewPost = (dados) => api.post('/post', dados);
 export const getPosts = () => api.get('/post');
+
+// Envia a foto de perfil do usuário
+export const uploadProfilePhoto = (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return api.post('/user/profile/photo', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+
+
 //export const getAuthenticatedUser = () => api.get('/user/profile/auth');

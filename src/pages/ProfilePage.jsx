@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { getConnection, getUserProfile } from "../services/apiService";
-import { postConnection } from "../services/apiService";
+import {
+  getConnection,
+  getUserProfile,
+  postConnection,
+} from "../services/apiService";
 import TopBar from "../components/TopBar";
 import { useAuth } from "../context/AuthContext";
+import { uploadProfilePhoto } from "../services/apiService";
 
 function ProfilePage() {
   const { nickname } = useParams();
@@ -12,6 +16,7 @@ function ProfilePage() {
   const [requestSent, setRequestSent] = useState(false);
   const [connection, setConnection] = useState(null);
   const { user: authUser } = useAuth();
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,13 +36,13 @@ function ProfilePage() {
   useEffect(() => {
     const fetchConnection = async () => {
       try {
-        if (!user) return; // só busca a conexão se o usuário já estiver carregado
+        if (!user) return;
         if (authUser?.nickName === nickname) return;
+
         const responseConnection = await getConnection(user.id);
         const connectionData = responseConnection.data;
         setConnection(connectionData);
 
-        // se já existir uma conexão ou uma solicitação pendente, desativa o botão
         if (
           connectionData &&
           (connectionData.status === "PENDING" ||
@@ -55,15 +60,30 @@ function ProfilePage() {
 
   const handleSendRequest = async () => {
     try {
-      if (!user?.id) {
-        console.error("ID do usuário alvo não encontrado");
-        return;
-      }
-      alert(user.id);
+      if (!user?.id) return;
       await postConnection({ idTarget: user.id });
       setRequestSent(true);
     } catch (error) {
       console.error("Erro ao enviar solicitação:", error);
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+   
+    try {
+      const response = await uploadProfilePhoto(file);
+      console.log("Foto enviada com sucesso:", response.data);
+      alert("Foto de perfil atualizada!");
+      // Atualiza a imagem localmente
+      /*setUser((prev) => ({
+        ...prev,
+        body: { ...prev.body, photoUrl: response.data.url },
+      }));*/
+    } catch (error) {
+      console.error("Erro ao enviar foto:", error);
+      alert("Falha ao enviar a imagem.");
     }
   };
 
@@ -90,24 +110,51 @@ function ProfilePage() {
 
   return (
     <div className="bg-[#e7ebf2] min-h-screen text-gray-800 font-sans">
-      {/* Top bar (fixed) */}
       <TopBar />
 
-      {/* Add padding to avoid overlap */}
       <div className="pt-20 max-w-4xl mx-auto flex flex-col md:flex-row gap-6 px-4">
-        {/* Sidebar */}
         <aside className="md:w-1/3 bg-white shadow-md rounded-md p-4 mt-4">
           <div className="text-center">
-            <img
-              src={photoUrl || "/default-avatar.png"}
-              alt={nickName}
-              className="w-32 h-32 rounded-md mx-auto mb-3 border border-gray-300 object-cover"
-            />
+            {/* 🔹 Contêiner que controla o hover e o clique */}
+            <div
+              className={`relative w-32 h-32 mx-auto mb-3 ${
+                isOwnProfile ? "cursor-pointer group" : ""
+              }`}
+              onClick={() =>
+                isOwnProfile && fileInputRef.current && fileInputRef.current.click()
+              }
+            >
+              <img
+                src={photoUrl || "/default-avatar.png"}
+                alt={nickName}
+                className="w-full h-full rounded-md border border-gray-300 object-cover"
+              />
+
+              {/* 🔹 Overlay visível só se for o próprio perfil */}
+              {isOwnProfile && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-md transition-opacity">
+                  <span className="text-white text-sm font-semibold">
+                    Alterar foto
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* 🔹 Input de arquivo escondido */}
+            {isOwnProfile && (
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            )}
+
             <h2 className="text-xl font-bold text-[#3b5998]">{name}</h2>
             <p className="text-gray-600 text-sm">@{nickName}</p>
           </div>
-          {/* Botão de solicitação */}
-          {/* 🔹 Só mostra botão se não for o próprio perfil */}
+
           {!isOwnProfile && (
             <div className="mt-4">
               {requestSent ? (
@@ -144,7 +191,7 @@ function ProfilePage() {
           </div>
         </aside>
 
-        {/* Posts column */}
+        {/* 🔹 Coluna de posts */}
         <main className="md:w-2/3 mt-4">
           <div className="bg-white shadow-md rounded-md p-4 mb-4">
             <h3 className="text-lg font-semibold text-[#3b5998] mb-3">
